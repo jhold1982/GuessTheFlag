@@ -27,10 +27,9 @@ struct ContentView: View {
     @State private var scoreNumber = 0
     @State private var selectedFlag = -1
     @State private var countries = allCountries.shuffled()
+	@State private var correctAnswer = Int.random(in: 0...2)
     
     static let allCountries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"]
-    
-    @State private var correctAnswer = Int.random(in: 0...2)
     
     let labels = [
         "Estonia": "Flag with three horizontal stripes of equal size. Top stripe blue, middle stripe black, bottom stripe white",
@@ -47,31 +46,34 @@ struct ContentView: View {
     ]
     
     var body: some View {
+		
         ZStack {
             
-            RadialGradient(stops: [
-                .init(color: Color(red: 0.1, green: 0.2, blue: 0.45), location: 0.3),
-                .init(color: Color(red: 0.76, green: 0.15, blue: 0.26), location: 0.3),
-            ], center: .top, startRadius: 700, endRadius: 600)
-                .ignoresSafeArea()
+			LinearGradient(colors: [.red, .red, .white, .blue, .blue], startPoint: .top, endPoint: .bottom)
+				.ignoresSafeArea()
                       
             VStack {
                 
                 Spacer()
 
-                Text("Guess The Flag")
+                Text("❔Guess the Flag⛳️")
+					.foregroundStyle(.primary)
                     .font(.largeTitle.bold())
-                    .foregroundColor(.white)
+                    
                 
-                VStack(spacing: 23) {
+				Spacer()
+				
+                VStack(spacing: 30) {
                     
                     VStack {
                         Text("Tap the country of")
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(.primary)
                             .font(.subheadline.weight(.heavy))
+							.padding(7)
                         
                         Text(countries[correctAnswer])
-                            .font(.largeTitle.weight(.semibold)).italic()
+							.foregroundStyle(.primary)
+                            .font(.title.weight(.bold)).italic()
                     }
                     
                     ForEach(0..<3) { number in
@@ -86,12 +88,14 @@ struct ContentView: View {
                                 .blur(radius: selectedFlag == -1 || selectedFlag == number ? 0 : 3)
                                 .animation(.default, value: selectedFlag)
                                 .accessibilityLabel(labels[countries[number], default: "Unknown Flag"])
+								.shadow(radius: 15)
+								.padding(10)
                         }
                     }
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 20)
-                .background(.thinMaterial)
+                .background(.ultraThinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 
                 Spacer()
@@ -100,11 +104,10 @@ struct ContentView: View {
                 Spacer()
                 
                 Text("Score: \(scoreNumber)")
-                    .foregroundColor(.white)
+					.foregroundStyle(.primary)
                     .font(.title.bold())
                 
                 Spacer()
-                
             }
             .padding()
         }
@@ -119,6 +122,7 @@ struct ContentView: View {
             Text("Your final score was \(scoreNumber)")
         }
     }
+	
     func flagTapped(_ number: Int) {
         selectedFlag = number
         if number == correctAnswer {
@@ -127,26 +131,22 @@ struct ContentView: View {
         } else {
             let needsThe = ["US", "UK"]
             let theirAnswer = countries[number]
-            
             if needsThe.contains(theirAnswer) {
                 scoreTitle = "False, that's the flag of the \(countries[number])."
             } else {
                 scoreTitle = "False, that's the flag of \(countries[number])."
             }
-            
-            
             if scoreNumber > 0 {
                 scoreNumber -= 1
             }
-            
         }
         if questionCounter == 8 {
             showingResults = true
         } else {
             showingScore = true
         }
-        
     }
+	
     func askQuestion() {
         countries.remove(at: correctAnswer)
         countries.shuffle()
@@ -155,6 +155,7 @@ struct ContentView: View {
         selectedFlag = -1
         
     }
+	
     func newGame() {
         questionCounter = 0
         scoreNumber = 0
