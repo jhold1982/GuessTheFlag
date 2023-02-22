@@ -7,30 +7,21 @@
 
 import SwiftUI
 
-struct FlagImage: View {
-    let name: String
-    
-    var body: some View {
-        Image(name)
-            .renderingMode(.original)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .shadow(radius: 5)
-    }
-}
-
 struct ContentView: View {
-    
     @State private var questionCounter = 1
+	
+	// alert variables
     @State private var showingScore = false
+	@State private var scoreTitle = ""
+	
+	// end game results variable
     @State private var showingResults = false
-    @State private var scoreTitle = ""
+    
     @State private var scoreNumber = 0
     @State private var selectedFlag = -1
     @State private var countries = allCountries.shuffled()
 	@State private var correctAnswer = Int.random(in: 0...2)
-    
     static let allCountries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"]
-    
     let labels = [
         "Estonia": "Flag with three horizontal stripes of equal size. Top stripe blue, middle stripe black, bottom stripe white",
         "France": "Flag with three vertical stripes of equal size. Left stripe blue, middle stripe white, right stripe red",
@@ -44,38 +35,26 @@ struct ContentView: View {
         "UK": "Flag with overlapping red and white crosses, both straight and diagonally, on a blue background",
         "US": "Flag with red and white stripes of equal size, with white stars on a blue background in the top-left corner"
     ]
-    
     var body: some View {
-		
         ZStack {
-            
 			LinearGradient(colors: [.red, .red, .white, .blue, .blue], startPoint: .top, endPoint: .bottom)
 				.ignoresSafeArea()
-                      
             VStack {
-                
                 Spacer()
-
-                Text("❔Guess the Flag⛳️")
+                Text("Guess the Flag")
 					.foregroundStyle(.primary)
                     .font(.largeTitle.bold())
-                    
-                
 				Spacer()
-				
                 VStack(spacing: 30) {
-                    
                     VStack {
                         Text("Tap the country of")
                             .foregroundStyle(.primary)
                             .font(.subheadline.weight(.heavy))
 							.padding(7)
-                        
                         Text(countries[correctAnswer])
 							.foregroundStyle(.primary)
-                            .font(.title.weight(.bold)).italic()
+							.font(.title.weight(.semibold)).italic()
                     }
-                    
                     ForEach(0..<3) { number in
                         Button {
                             flagTapped(number)
@@ -88,8 +67,6 @@ struct ContentView: View {
                                 .blur(radius: selectedFlag == -1 || selectedFlag == number ? 0 : 3)
                                 .animation(.default, value: selectedFlag)
                                 .accessibilityLabel(labels[countries[number], default: "Unknown Flag"])
-								.shadow(radius: 15)
-								.padding(10)
                         }
                     }
                 }
@@ -97,16 +74,13 @@ struct ContentView: View {
                 .padding(.vertical, 20)
                 .background(.ultraThinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
-                
                 Spacer()
                 Spacer()
                 Spacer()
                 Spacer()
-                
                 Text("Score: \(scoreNumber)")
 					.foregroundStyle(.primary)
                     .font(.title.bold())
-                
                 Spacer()
             }
             .padding()
@@ -122,7 +96,6 @@ struct ContentView: View {
             Text("Your final score was \(scoreNumber)")
         }
     }
-	
     func flagTapped(_ number: Int) {
         selectedFlag = number
         if number == correctAnswer {
@@ -146,16 +119,13 @@ struct ContentView: View {
             showingScore = true
         }
     }
-	
     func askQuestion() {
         countries.remove(at: correctAnswer)
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
         questionCounter += 1
         selectedFlag = -1
-        
     }
-	
     func newGame() {
         questionCounter = 0
         scoreNumber = 0
