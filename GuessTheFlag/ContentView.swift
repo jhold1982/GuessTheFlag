@@ -119,8 +119,8 @@ struct ContentView: View {
 	
 	// MARK: - FUNCTIONS
 	
-	/// <#Description#>
-	/// - Parameter number: <#number description#>
+	/// Method to track when a flag image is tapped
+	/// - Parameter number: number in flag / corect answer array
 	func flagTapped(_ number: Int) {
 		
 		selectedFlag = number
@@ -151,7 +151,8 @@ struct ContentView: View {
 		}
 	}
 	
-	/// <#Description#>
+	/// Removes correct answer from array after being selected, shuffles flags,
+	/// adds to the question counter, and removes 1 from selected flags array
 	func askQuestion() {
 		countries.remove(at: correctAnswer)
 		countries.shuffle()
@@ -160,7 +161,7 @@ struct ContentView: View {
 		selectedFlag = -1
 	}
 	
-	/// <#Description#>
+	/// Resets questionCounter, scoreNumber and starts new set of questions
 	func newGame() {
 		questionCounter = 0
 		scoreNumber = 0
